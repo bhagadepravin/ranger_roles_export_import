@@ -17,7 +17,9 @@ The import script uploads roles from a JSON file to a destination Ranger instanc
 You can install the `requests` library using pip:
 
 ```bash
-pip install requests
+pip install requests or
+pip2 install requests or
+pip3 install requests
 ```
 
 ## Usage

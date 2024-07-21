@@ -95,11 +95,6 @@ Successfully Imported Role role2 with status 200
 10 roles were imported successfully.
 ```
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-```
-
 ### Notes:
 - **Replace `http://source-ranger-host:6080` and `http://destination-ranger-host:6080` with the actual URLs of your Ranger instances.**
 - **Ensure the `export_roles.py` and `import_roles.py` scripts are in the same directory as this README file.**

@@ -1,7 +1,9 @@
 ```markdown
 # Ranger Roles Export and Import Scripts
 
-This repository contains scripts to export and import roles from Apache Ranger. The export script downloads roles from a source Ranger instance and saves them to a JSON file. The import script uploads roles from a JSON file to a destination Ranger instance.
+This repository contains scripts to export and import roles from Apache Ranger. 
+The export script downloads roles from a source Ranger instance and saves them to a JSON file. 
+The import script uploads roles from a JSON file to a destination Ranger instance.
 
 ## Scripts
 

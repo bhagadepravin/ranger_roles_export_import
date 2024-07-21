@@ -1,4 +1,3 @@
-```markdown
 # Ranger Roles Export and Import Scripts
 
 This repository contains scripts to export and import roles from Apache Ranger. 

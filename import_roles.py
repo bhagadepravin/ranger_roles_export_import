@@ -3,8 +3,8 @@ from requests import post
 import requests
 from getpass import getpass
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
+from concurrent.futures import ThreadPoolExecutor, as_completed
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-import time
 
 try:
     input = raw_input  # For Python 2 compatibility
@@ -22,7 +22,8 @@ headers = {'Accept': 'application/json'}
 with open(IMPORT_JSON_FILE, 'r') as infile:
     roles_convert = json.load(infile)
 
-ROLES = roles_convert['roles']
+# Since roles are directly in the JSON root
+ROLES = roles_convert
 TOTAL_ROLES = len(ROLES)
 
 print("Total number of roles " + str(TOTAL_ROLES) + " will be imported.")
@@ -30,20 +31,28 @@ print("Total number of roles " + str(TOTAL_ROLES) + " will be imported.")
 FAILED_ROLES = []
 IMPORTED_ROLES = []
 
-# Importing roles with all the configured users and groups
-for ROLE in ROLES:
-    time.sleep(5)
-    del ROLE['id']
-    response = post(IMPORT_RANGER_URL + ROLES_API, headers=headers, json=ROLE, verify=False,
+def import_role(role):
+    del role['id']
+    response = post(IMPORT_RANGER_URL + ROLES_API, headers=headers, json=role, verify=False,
                     auth=(IMPORT_RANGER_ADMIN_USER, IMPORT_RANGER_ADMIN_PASSWORD))
-    STATUS = response.status_code
-    ROLENAME = ROLE['name']
-    if STATUS == 200:
-        print("Successfully Imported Role " + ROLENAME + " with status " + str(STATUS))
-        IMPORTED_ROLES.append(ROLENAME)
+    status = response.status_code
+    rolename = role['name']
+    if status == 200:
+        return rolename, True
     else:
-        print("Import for role " + ROLENAME + " failed with status " + str(STATUS))
-        FAILED_ROLES.append(ROLENAME)
+        return rolename, False
+
+# Use ThreadPoolExecutor to import roles concurrently
+with ThreadPoolExecutor(max_workers=10) as executor:
+    future_to_role = {executor.submit(import_role, role): role for role in ROLES}
+    for future in as_completed(future_to_role):
+        rolename, success = future.result()
+        if success:
+            print("Successfully Imported Role " + rolename)
+            IMPORTED_ROLES.append(rolename)
+        else:
+            print("Import for role " + rolename + " failed")
+            FAILED_ROLES.append(rolename)
 
 print("\n" + str(len(FAILED_ROLES)) + " roles failed to import.")
 print(str(len(IMPORTED_ROLES)) + " roles were imported successfully.")

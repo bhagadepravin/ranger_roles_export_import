@@ -94,10 +94,3 @@ Successfully Imported Role role2 with status 200
 ...
 10 roles were imported successfully.
 ```
-
-### Notes:
-- **Replace `http://source-ranger-host:6080` and `http://destination-ranger-host:6080` with the actual URLs of your Ranger instances.**
-- **Ensure the `export_roles.py` and `import_roles.py` scripts are in the same directory as this README file.**
-- **You might want to add more detailed error handling and validation depending on your specific requirements.**
-
-Feel free to customize this README to better suit your project's needs.
